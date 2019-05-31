@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package minahproto;
+
+service Hello {
+    // Sends a greeting
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
+    rpc Add (AddRequest) returns (AddResponse) {}
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+    string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+    string message = 1;
+}
+
+message AddRequest {
+    int64 arg1 = 1;
+    int64 arg2 = 2;
+}
+
+message AddResponse {
+    int64 sum = 1;
+}
