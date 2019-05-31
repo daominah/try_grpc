@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/daominah/try_grpc/minahproto"
@@ -43,9 +44,24 @@ func main() {
 	r1, err := Func1(c)
 	fmt.Println("pussy", r1, err)
 
-	r2, err := Func2(c, 2, 3)
-	fmt.Println("pussy2", r2, err)
-
-	r3, err := Func2(c, 4, 7)
-	fmt.Println("pussy2", r3, err)
+	var locker sync.Mutex
+	var waiter sync.WaitGroup
+	nSuccess, nAll := 0, 0
+	for i := 0; i < 30; i++ {
+		waiter.Add(1)
+		go func(i int) {
+			r2, err := Func2(c, 2, 3)
+			_, _ = r2, err
+			//fmt.Println("pussy", i, r2, err)
+			locker.Lock()
+			nAll +=1
+			if err == nil {
+				nSuccess += 1
+			}
+			locker.Unlock()
+			waiter.Add(-1)
+		}(i)
+	}
+	waiter.Wait()
+	fmt.Printf("result: nAll %v, nSuc %v.\n", nAll, nSuccess)
 }

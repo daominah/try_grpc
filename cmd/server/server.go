@@ -24,6 +24,7 @@ package main
 import (
 	"context"
 	"log"
+	"math/rand"
 	"net"
 	"time"
 
@@ -44,7 +45,7 @@ func (s *HelloServerImpl) SayHello(ctx context.Context, in *minahproto.HelloRequ
 func (s *HelloServerImpl) Add(ctx context.Context, r *minahproto.AddRequest) (
 	*minahproto.AddResponse, error) {
 	_ = time.Second
-	time.Sleep(2 * time.Second)
+	time.Sleep(time.Duration(rand.Intn(1500)) * time.Millisecond)
 	return &minahproto.AddResponse{Sum: r.Arg1 + r.Arg2}, nil
 }
 
